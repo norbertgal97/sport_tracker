@@ -1,0 +1,50 @@
+<?xml version="1.0" encoding="utf-8"?>
+<PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android">
+    <PreferenceCategory android:title="Notification">
+        <SwitchPreference
+                android:key="notificationSwitch"
+                android:summaryOff="Off"
+                android:summaryOn="On"
+                android:editable="true"
+                android:title="Notification"
+                android:defaultValue="false"/>
+
+        <EditTextPreference
+                android:key="goal"
+                android:title="Set your goal"
+                android:summary="5000 steps"
+                android:defaultValue="5000"
+                android:inputType="numberDecimal"
+                android:editable="true"
+        />
+
+    </PreferenceCategory>
+    <PreferenceCategory android:title="Profile">
+        <EditTextPreference
+                android:key="name"
+                android:title="Full name"
+                android:defaultValue="default"
+                android:summary="default"
+                android:inputType="text"
+                android:editable="true"
+        />
+
+        <EditTextPreference
+                android:key="height"
+                android:title="Height"
+                android:defaultValue="170"
+                android:summary="170 cm"
+                android:inputType="numberDecimal"
+                android:editable="true"
+        />
+
+        <EditTextPreference
+                android:key="weight"
+                android:title="Weight"
+                android:defaultValue="70"
+                android:summary="70 kg"
+                android:inputType="numberDecimal"
+                android:editable="true"
+        />
+    </PreferenceCategory>
+</PreferenceScreen>
