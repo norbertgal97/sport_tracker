@@ -1,6 +1,5 @@
 package hu.bme.aut.sporttracker
 
-
 import android.content.Intent
 import android.os.Bundle
 import android.preference.PreferenceManager
@@ -8,8 +7,6 @@ import android.support.v7.app.AppCompatActivity
 import android.view.Menu
 import android.view.MenuItem
 import android.widget.Toast
-
-
 import kotlinx.android.synthetic.main.activity_main.*
 import kotlinx.android.synthetic.main.content_main.*
 
@@ -38,13 +35,13 @@ class MainActivity : AppCompatActivity() {
 
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
         return when (item.itemId) {
-           R.id.action_settings ->{
-               val intentSettings = Intent(this, SettingsActivity::class.java)
-               startActivity(intentSettings)
-               true
-           }
+            R.id.action_settings ->{
+                val intentSettings = Intent(this, SettingsActivity::class.java)
+                startActivity(intentSettings)
+                true
+            }
             else -> super.onOptionsItemSelected(item)
 
-       }
+        }
     }
 }

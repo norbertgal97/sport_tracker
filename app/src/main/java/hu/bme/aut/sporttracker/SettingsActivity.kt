@@ -6,8 +6,9 @@ import android.preference.PreferenceManager
 import android.support.v7.app.AppCompatActivity
 import android.support.v7.preference.PreferenceFragmentCompat
 
+
 class SettingsActivity : AppCompatActivity(), SharedPreferences.OnSharedPreferenceChangeListener {
-    lateinit var settingsFragment: FragmentSettingsBasic
+    private lateinit var settingsFragment: FragmentSettingsBasic
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         settingsFragment = FragmentSettingsBasic()
@@ -28,6 +29,14 @@ class SettingsActivity : AppCompatActivity(), SharedPreferences.OnSharedPreferen
             .registerOnSharedPreferenceChangeListener(this)
     }
 
+    override fun onResume() {
+        super.onResume()
+        initSum(PreferenceManager.getDefaultSharedPreferences(applicationContext), "goal")
+        initSum(PreferenceManager.getDefaultSharedPreferences(applicationContext), "name")
+        initSum(PreferenceManager.getDefaultSharedPreferences(applicationContext), "weight")
+        initSum(PreferenceManager.getDefaultSharedPreferences(applicationContext), "height")
+    }
+
     override fun onStop() {
         PreferenceManager.getDefaultSharedPreferences(this)
             .unregisterOnSharedPreferenceChangeListener(this)
@@ -35,6 +44,10 @@ class SettingsActivity : AppCompatActivity(), SharedPreferences.OnSharedPreferen
     }
 
     override fun onSharedPreferenceChanged(sharedPreferences: SharedPreferences?, key: String?) {
+        initSum(sharedPreferences, key)
+    }
+
+    private fun initSum(sharedPreferences: SharedPreferences?, key: String?) {
         if (sharedPreferences != null && key != "notificationSwitch") {
             val value: String = when (key) {
                 "goal" -> " steps"
@@ -54,5 +67,3 @@ class SettingsActivity : AppCompatActivity(), SharedPreferences.OnSharedPreferen
         }
     }
 }
-
-
