@@ -25,6 +25,9 @@ class MainActivity : AppCompatActivity() {
         button.setOnClickListener {
             val sharedPreferences = PreferenceManager.getDefaultSharedPreferences(applicationContext)
             Toast.makeText(this,sharedPreferences.getString("name","DEFAULT"),Toast.LENGTH_LONG).show()
+
+            val intent = Intent(this, LoginActivity::class.java)
+            startActivity(intent)
         }
     }
 
