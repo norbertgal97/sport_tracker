@@ -7,6 +7,7 @@ import android.support.v7.app.AppCompatActivity
 import android.view.Menu
 import android.view.MenuItem
 import android.widget.Toast
+import com.google.firebase.auth.FirebaseAuth
 import kotlinx.android.synthetic.main.activity_main.*
 import kotlinx.android.synthetic.main.content_main.*
 
@@ -23,7 +24,7 @@ class MainActivity : AppCompatActivity() {
 
         button.setOnClickListener {
             val sharedPreferences = PreferenceManager.getDefaultSharedPreferences(applicationContext)
-            Toast.makeText(this,sharedPreferences.getString("name","DEFAULT"),Toast.LENGTH_LONG).show()
+            Toast.makeText(this, sharedPreferences.getString("name", "DEFAULT"), Toast.LENGTH_LONG).show()
         }
     }
 
@@ -33,14 +34,23 @@ class MainActivity : AppCompatActivity() {
     }
 
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
-        return when (item.itemId) {
-            R.id.action_settings ->{
+        when (item.itemId) {
+            R.id.action_settings -> {
                 val intentSettings = Intent(this, SettingsActivity::class.java)
                 startActivity(intentSettings)
-                true
             }
-            else -> super.onOptionsItemSelected(item)
-
+            R.id.sign_out -> {
+                FirebaseAuth.getInstance().signOut()
+                startActivity(Intent(this, LoginActivity::class.java))
+                finish()
+            }
         }
+        return true
+    }
+
+    override fun onResume() {
+        super.onResume()
+        if(!FirebaseAuth.getInstance().currentUser!!.isEmailVerified)
+            Toast.makeText(this,"Verify your account!",Toast.LENGTH_LONG).show()
     }
 }

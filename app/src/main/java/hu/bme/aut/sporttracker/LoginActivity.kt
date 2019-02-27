@@ -101,9 +101,7 @@ class LoginActivity : AppCompatActivity() {
             return
         }
         showProgressDialog()
-        val user = auth.currentUser
-        try {
-            if (user!!.isEmailVerified) {
+
                 showProgressDialog()
                 auth.signInWithEmailAndPassword(etEmail.text.toString(), etPassword.text.toString())
                     .addOnSuccessListener {
@@ -115,13 +113,8 @@ class LoginActivity : AppCompatActivity() {
                         hideProgressDialog()
                     }
                 hideProgressDialog()
-            } else {
-                Toast.makeText(this, "Verify your account!", Toast.LENGTH_LONG).show()
-            }
 
-        } catch (e: NullPointerException) {
-            Toast.makeText(this, "Current user is null", Toast.LENGTH_LONG).show()
-        }
+
         hideProgressDialog()
     }
 
