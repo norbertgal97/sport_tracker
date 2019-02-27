@@ -13,20 +13,16 @@
                 android:key="goal"
                 android:title="Set your goal"
                 android:summary="5000 steps"
-                android:defaultValue="5000"
-                android:inputType="numberDecimal"
-                android:editable="true"
+                android:inputType="phone"
         />
 
     </PreferenceCategory>
     <PreferenceCategory android:title="Profile">
-        <EditTextPreference
+        <Preference
                 android:key="name"
-                android:title="Full name"
+                android:title="Name"
                 android:defaultValue="default"
                 android:summary="default"
-                android:inputType="text"
-                android:editable="true"
         />
 
         <EditTextPreference
@@ -35,6 +31,7 @@
                 android:defaultValue="170"
                 android:summary="170 cm"
                 android:inputType="numberDecimal"
+                android:digits="0123456789"
                 android:editable="true"
         />
 
@@ -44,6 +41,7 @@
                 android:defaultValue="70"
                 android:summary="70 kg"
                 android:inputType="numberDecimal"
+                android:digits="0123456789"
                 android:editable="true"
         />
     </PreferenceCategory>
