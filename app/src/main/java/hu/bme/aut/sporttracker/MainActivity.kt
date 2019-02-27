@@ -15,7 +15,6 @@ class MainActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
-        setSupportActionBar(toolbar)
 
         fab.setOnClickListener {
             val intent = Intent(this, CounterActivity::class.java)
@@ -25,9 +24,6 @@ class MainActivity : AppCompatActivity() {
         button.setOnClickListener {
             val sharedPreferences = PreferenceManager.getDefaultSharedPreferences(applicationContext)
             Toast.makeText(this,sharedPreferences.getString("name","DEFAULT"),Toast.LENGTH_LONG).show()
-
-            val intent = Intent(this, LoginActivity::class.java)
-            startActivity(intent)
         }
     }
 
