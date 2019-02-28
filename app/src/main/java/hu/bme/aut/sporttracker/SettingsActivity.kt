@@ -2,9 +2,11 @@ package hu.bme.aut.sporttracker
 
 import android.content.SharedPreferences
 import android.os.Bundle
+
 import android.preference.PreferenceManager
 import android.support.v7.app.AppCompatActivity
 import android.support.v7.preference.PreferenceFragmentCompat
+import com.google.firebase.auth.FirebaseAuth
 
 
 class SettingsActivity : AppCompatActivity(), SharedPreferences.OnSharedPreferenceChangeListener {
@@ -27,6 +29,8 @@ class SettingsActivity : AppCompatActivity(), SharedPreferences.OnSharedPreferen
         super.onStart()
         PreferenceManager.getDefaultSharedPreferences(this)
             .registerOnSharedPreferenceChangeListener(this)
+        val sharedPreferences = PreferenceManager.getDefaultSharedPreferences(applicationContext)
+        sharedPreferences.edit().putString("name", FirebaseAuth.getInstance().currentUser?.displayName.toString()).apply()
     }
 
     override fun onResume() {

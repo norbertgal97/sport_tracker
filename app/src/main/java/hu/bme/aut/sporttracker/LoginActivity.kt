@@ -12,7 +12,6 @@ import com.google.firebase.auth.UserProfileChangeRequest
 import kotlinx.android.synthetic.main.activity_login.*
 
 
-
 class LoginActivity : AppCompatActivity() {
     private lateinit var auth: FirebaseAuth
 
@@ -46,6 +45,14 @@ class LoginActivity : AppCompatActivity() {
         return valid
     }
 
+    override fun onStart() {
+        super.onStart()
+        if (auth.currentUser != null) {
+            startActivity(Intent(this@LoginActivity, MainActivity::class.java))
+            finish()
+        }
+    }
+
     private fun createAccount() {
         if (!validateForm()) {
             return
@@ -73,16 +80,14 @@ class LoginActivity : AppCompatActivity() {
         if (!validateForm()) {
             return
         }
-                auth.signInWithEmailAndPassword(etEmail.text.toString(), etPassword.text.toString())
-                    .addOnSuccessListener {
-                        startActivity(Intent(this@LoginActivity, MainActivity::class.java))
-                        finish()
-                    }
-                    .addOnFailureListener { exception ->
-                        Toast.makeText(this, exception.localizedMessage, Toast.LENGTH_LONG).show()
-                    }
-        val sharedPreferences = PreferenceManager.getDefaultSharedPreferences(applicationContext)
-        sharedPreferences.edit().putString("name",auth.currentUser?.displayName.toString()).apply()
+        auth.signInWithEmailAndPassword(etEmail.text.toString(), etPassword.text.toString())
+            .addOnSuccessListener {
+                startActivity(Intent(this@LoginActivity, MainActivity::class.java))
+                finish()
+            }
+            .addOnFailureListener { exception ->
+                Toast.makeText(this, exception.localizedMessage, Toast.LENGTH_LONG).show()
+            }
     }
 
     private fun sendEmailVerification() {
