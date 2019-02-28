@@ -11,6 +11,7 @@ import com.google.firebase.auth.FirebaseAuth
 
 class SettingsActivity : AppCompatActivity(), SharedPreferences.OnSharedPreferenceChangeListener {
     private lateinit var settingsFragment: FragmentSettingsBasic
+    private var KEYS = arrayOf("goal", "name", "weight", "height", "gender", "age")
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         settingsFragment = FragmentSettingsBasic()
@@ -30,15 +31,15 @@ class SettingsActivity : AppCompatActivity(), SharedPreferences.OnSharedPreferen
         PreferenceManager.getDefaultSharedPreferences(this)
             .registerOnSharedPreferenceChangeListener(this)
         val sharedPreferences = PreferenceManager.getDefaultSharedPreferences(applicationContext)
-        sharedPreferences.edit().putString("name", FirebaseAuth.getInstance().currentUser?.displayName.toString()).apply()
+        sharedPreferences.edit().putString("name", FirebaseAuth.getInstance().currentUser?.displayName.toString())
+            .apply()
     }
 
     override fun onResume() {
         super.onResume()
-        initSum(PreferenceManager.getDefaultSharedPreferences(applicationContext), "goal")
-        initSum(PreferenceManager.getDefaultSharedPreferences(applicationContext), "name")
-        initSum(PreferenceManager.getDefaultSharedPreferences(applicationContext), "weight")
-        initSum(PreferenceManager.getDefaultSharedPreferences(applicationContext), "height")
+
+        for (key in KEYS)
+            initSum(PreferenceManager.getDefaultSharedPreferences(applicationContext), key)
     }
 
     override fun onStop() {
@@ -57,6 +58,7 @@ class SettingsActivity : AppCompatActivity(), SharedPreferences.OnSharedPreferen
                 "goal" -> " steps"
                 "height" -> " cm"
                 "weight" -> " kg"
+                "age" -> " years"
                 else -> {
                     " "
                 }
