@@ -50,7 +50,7 @@ class MainActivity : AppCompatActivity() {
 
     override fun onResume() {
         super.onResume()
-        if(!FirebaseAuth.getInstance().currentUser!!.isEmailVerified)
-            Toast.makeText(this,"Verify your account!",Toast.LENGTH_LONG).show()
+        if (!FirebaseAuth.getInstance().currentUser!!.isEmailVerified)
+            Toast.makeText(this, "Verify your account!", Toast.LENGTH_LONG).show()
     }
 }

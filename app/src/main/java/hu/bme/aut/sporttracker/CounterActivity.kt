@@ -14,11 +14,13 @@ import android.support.v4.content.ContextCompat
 import com.github.mikephil.charting.data.PieData
 import com.github.mikephil.charting.data.PieDataSet
 import com.github.mikephil.charting.charts.PieChart
+import kotlinx.android.synthetic.main.activity_counter.*
 
 class CounterActivity : AppCompatActivity(), SensorEventListener {
     private lateinit var sensorManager: SensorManager
     private lateinit var chartStep: PieChart
     private var goal: Float = 500f
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_counter)
@@ -39,11 +41,13 @@ class CounterActivity : AppCompatActivity(), SensorEventListener {
         super.onResume()
         val countSensor: Sensor? = sensorManager.getDefaultSensor(Sensor.TYPE_STEP_COUNTER)
         sensorManager.registerListener(this, countSensor, SensorManager.SENSOR_DELAY_NORMAL)
+        cTime.start()
     }
 
     override fun onPause() {
         super.onPause()
         sensorManager.unregisterListener(this)
+        cTime.stop()
     }
 
     override fun onAccuracyChanged(sensor: Sensor?, accuracy: Int) {
