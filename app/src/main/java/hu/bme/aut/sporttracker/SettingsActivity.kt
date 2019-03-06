@@ -87,9 +87,9 @@ class SettingsActivity : AppCompatActivity(), SharedPreferences.OnSharedPreferen
             FirebaseDatabase.getInstance().getReference("users/" + FirebaseAuth.getInstance().currentUser!!.uid)
         when {
             key == "gender" -> reference.child(key).setValue(sharedPreferences?.getString(key, ""))
-            key == "name" -> reference.child(key).setValue(sharedPreferences?.getString(key, ""))
             key == "notificationSwitch" -> reference.child(key).setValue(sharedPreferences?.getBoolean(key, false))
-            key != null -> reference.child(key).setValue(sharedPreferences?.getString(key, "0")?.toInt())
+            key != null && key != "name" -> reference.child(key).setValue(sharedPreferences?.getString(key, "0")?.toInt()
+            )
         }
         initSum(sharedPreferences, key)
     }
