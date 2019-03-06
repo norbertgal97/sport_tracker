@@ -4,6 +4,7 @@ import android.content.SharedPreferences
 import android.os.Bundle
 
 import android.preference.PreferenceManager
+import android.preference.SwitchPreference
 import android.support.v7.app.AppCompatActivity
 import android.support.v7.preference.PreferenceFragmentCompat
 import android.widget.Toast
@@ -13,7 +14,7 @@ import com.google.firebase.database.*
 
 class SettingsActivity : AppCompatActivity(), SharedPreferences.OnSharedPreferenceChangeListener {
     private lateinit var settingsFragment: FragmentSettingsBasic
-    private var KEYS = arrayOf("goal", "name", "weight", "height", "gender", "age")
+    private var KEYS = arrayOf("goal", "name", "weight", "height", "gender", "age", "notificationSwitch")
     lateinit var databaseUser: DatabaseReference
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -31,9 +32,17 @@ class SettingsActivity : AppCompatActivity(), SharedPreferences.OnSharedPreferen
             object : ValueEventListener {
                 override fun onDataChange(dataSnapshot: DataSnapshot) {
                     for (key in KEYS)
-                        if (key != "name")
+                        if (key != "name" && key != "notificationSwitch")
                             sharedPreferences.edit().putString(key, dataSnapshot.child(key).value.toString())
                                 .apply()
+
+                    sharedPreferences.edit()
+                        .putBoolean("notificationSwitch", dataSnapshot.child("notificationSwitch").value as Boolean)
+                        .apply()
+
+                    val noti =
+                        settingsFragment.findPreference("notificationSwitch") as android.support.v14.preference.SwitchPreference
+                    noti.isChecked = dataSnapshot.child("notificationSwitch").value as Boolean
                 }
 
                 override fun onCancelled(databaseError: DatabaseError) {
@@ -78,6 +87,7 @@ class SettingsActivity : AppCompatActivity(), SharedPreferences.OnSharedPreferen
             FirebaseDatabase.getInstance().getReference("users/" + FirebaseAuth.getInstance().currentUser!!.uid)
         when {
             key == "gender" -> reference.child(key).setValue(sharedPreferences?.getString(key, ""))
+            key == "name" -> reference.child(key).setValue(sharedPreferences?.getString(key, ""))
             key == "notificationSwitch" -> reference.child(key).setValue(sharedPreferences?.getBoolean(key, false))
             key != null -> reference.child(key).setValue(sharedPreferences?.getString(key, "0")?.toInt())
         }
@@ -100,7 +110,6 @@ class SettingsActivity : AppCompatActivity(), SharedPreferences.OnSharedPreferen
             } catch (e: NullPointerException) {
                 ""
             }
-
             settingsFragment.findPreference(key).summary = string + value
         }
     }
