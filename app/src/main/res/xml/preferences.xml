@@ -7,26 +7,46 @@
                 android:summaryOn="On"
                 android:editable="true"
                 android:title="Notification"
-                android:defaultValue="false"/>
+                android:defaultValue="false"
+                android:icon="@drawable/notification"/>
 
         <EditTextPreference
                 android:key="goal"
                 android:title="Set your goal"
                 android:summary="5000 steps"
-                android:defaultValue="5000"
-                android:inputType="numberDecimal"
-                android:editable="true"
+                android:inputType="phone"
+                android:icon="@drawable/goal"
         />
 
     </PreferenceCategory>
     <PreferenceCategory android:title="Profile">
-        <EditTextPreference
+        <Preference
                 android:key="name"
-                android:title="Full name"
+                android:title="Name"
                 android:defaultValue="default"
                 android:summary="default"
-                android:inputType="text"
+                android:icon="@drawable/name"
+        />
+
+        <EditTextPreference
+                android:key="age"
+                android:title="Age"
+                android:defaultValue="35"
+                android:summary="35 years"
+                android:inputType="numberDecimal"
+                android:digits="0123456789"
                 android:editable="true"
+                android:icon="@drawable/age"
+        />
+
+        <ListPreference
+        android:key="gender"
+        android:icon="@drawable/gender"
+        android:title="Gender"
+        android:summary="Male"
+        android:defaultValue="Male"
+        android:entries="@array/genderList"
+        android:entryValues="@array/genderList"
         />
 
         <EditTextPreference
@@ -35,7 +55,9 @@
                 android:defaultValue="170"
                 android:summary="170 cm"
                 android:inputType="numberDecimal"
+                android:digits="0123456789"
                 android:editable="true"
+                android:icon="@drawable/height"
         />
 
         <EditTextPreference
@@ -44,7 +66,9 @@
                 android:defaultValue="70"
                 android:summary="70 kg"
                 android:inputType="numberDecimal"
+                android:digits="0123456789"
                 android:editable="true"
+                android:icon="@drawable/weight"
         />
     </PreferenceCategory>
 </PreferenceScreen>
