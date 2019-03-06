@@ -4,7 +4,6 @@ import android.content.SharedPreferences
 import android.os.Bundle
 
 import android.preference.PreferenceManager
-import android.preference.SwitchPreference
 import android.support.v7.app.AppCompatActivity
 import android.widget.Toast
 import com.google.firebase.auth.FirebaseAuth
