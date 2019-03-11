@@ -4,12 +4,13 @@ import android.content.SharedPreferences
 import android.os.Bundle
 
 import android.preference.PreferenceManager
-import android.preference.SwitchPreference
 import android.support.v7.app.AppCompatActivity
-import android.support.v7.preference.PreferenceFragmentCompat
 import android.widget.Toast
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.database.*
+import com.takisoft.fix.support.v7.preference.PreferenceFragmentCompat
+
+
 
 
 class SettingsActivity : AppCompatActivity(), SharedPreferences.OnSharedPreferenceChangeListener {
@@ -52,8 +53,8 @@ class SettingsActivity : AppCompatActivity(), SharedPreferences.OnSharedPreferen
     }
 
     class FragmentSettingsBasic : PreferenceFragmentCompat() {
-        override fun onCreatePreferences(savedInstanceState: Bundle?, key: String?) {
-            addPreferencesFromResource(R.xml.preferences)
+        override fun onCreatePreferencesFix(savedInstanceState: Bundle?, rootKey: String?) {
+            setPreferencesFromResource(R.xml.preferences, rootKey)
         }
     }
 
@@ -85,12 +86,13 @@ class SettingsActivity : AppCompatActivity(), SharedPreferences.OnSharedPreferen
     override fun onSharedPreferenceChanged(sharedPreferences: SharedPreferences?, key: String?) {
         val reference =
             FirebaseDatabase.getInstance().getReference("users/" + FirebaseAuth.getInstance().currentUser!!.uid)
-        when {
-            key == "gender" -> reference.child(key).setValue(sharedPreferences?.getString(key, ""))
-            key == "notificationSwitch" -> reference.child(key).setValue(sharedPreferences?.getBoolean(key, false))
-            key != null && key != "name" -> reference.child(key).setValue(sharedPreferences?.getString(key, "0")?.toInt()
+        when (key) {
+            "gender" -> reference.child(key).setValue(sharedPreferences?.getString(key, ""))
+            "notificationSwitch" -> reference.child(key).setValue(sharedPreferences?.getBoolean(key, false))
+            in listOf("age","goal","height","weight") -> reference.child(key!!).setValue(sharedPreferences?.getString(key, "0")?.toInt()
             )
         }
+        if(key in KEYS)
         initSum(sharedPreferences, key)
     }
 

@@ -5,7 +5,9 @@
         xmlns:tools="http://schemas.android.com/tools"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        tools:context=".MainActivity">
+        tools:context=".MainActivity"
+        android:background="@drawable/login_screen_bg"
+        android:id="@+id/main_layout">
 
     <include layout="@layout/content_main" android:id="@+id/include"/>
 
@@ -17,5 +19,11 @@
             android:layout_margin="@dimen/fab_margin"
             app:srcCompat="@drawable/exercise"
             app:layout_anchor="@+id/include" app:layout_anchorGravity="bottom|center"/>
+
+    <com.facebook.share.widget.ShareButton
+            android:text="Share"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:id="@+id/sharebutton"/>
 
 </android.support.design.widget.CoordinatorLayout>

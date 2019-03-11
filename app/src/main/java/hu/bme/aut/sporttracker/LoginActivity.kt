@@ -20,13 +20,14 @@ class LoginActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_login)
-        setSupportActionBar(toolbar)
 
         auth = FirebaseAuth.getInstance()
         databaseUser = FirebaseDatabase.getInstance().getReference("users")
 
         btnLogin.setOnClickListener { loginAccount() }
         btnRegister.setOnClickListener { createAccount() }
+
+        login_layout_constraint.background.alpha=255
     }
 
     private fun validateForm(): Boolean {
@@ -52,10 +53,17 @@ class LoginActivity : AppCompatActivity() {
 
     override fun onStart() {
         super.onStart()
+        login_layout.translationY=-1000f
+        login_layout.animate().translationYBy(1000f).duration = 750
         if (auth.currentUser != null) {
             startActivity(Intent(this@LoginActivity, MainActivity::class.java))
             finish()
         }
+    }
+
+    override fun onResume() {
+        super.onResume()
+
     }
 
     private fun createAccount() {
