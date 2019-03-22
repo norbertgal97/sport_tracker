@@ -10,9 +10,6 @@ import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.database.*
 import com.takisoft.fix.support.v7.preference.PreferenceFragmentCompat
 
-
-
-
 class SettingsActivity : AppCompatActivity(), SharedPreferences.OnSharedPreferenceChangeListener {
     private lateinit var settingsFragment: FragmentSettingsBasic
     private var KEYS = arrayOf("goal", "name", "weight", "height", "gender", "age", "notificationSwitch")
@@ -20,7 +17,6 @@ class SettingsActivity : AppCompatActivity(), SharedPreferences.OnSharedPreferen
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-
         settingsFragment = FragmentSettingsBasic()
         supportFragmentManager.beginTransaction()
             .replace(android.R.id.content, settingsFragment)
@@ -29,7 +25,7 @@ class SettingsActivity : AppCompatActivity(), SharedPreferences.OnSharedPreferen
         val sharedPreferences = PreferenceManager.getDefaultSharedPreferences(applicationContext)
         databaseUser = FirebaseDatabase.getInstance().getReference("users")
 
-        databaseUser.child(FirebaseAuth.getInstance().currentUser!!.uid).addListenerForSingleValueEvent(
+        databaseUser.child(FirebaseAuth.getInstance().currentUser!!.uid).child("Settings").addListenerForSingleValueEvent(
             object : ValueEventListener {
                 override fun onDataChange(dataSnapshot: DataSnapshot) {
                     for (key in KEYS)
@@ -52,15 +48,8 @@ class SettingsActivity : AppCompatActivity(), SharedPreferences.OnSharedPreferen
             })
     }
 
-    class FragmentSettingsBasic : PreferenceFragmentCompat() {
-        override fun onCreatePreferencesFix(savedInstanceState: Bundle?, rootKey: String?) {
-            setPreferencesFromResource(R.xml.preferences, rootKey)
-        }
-    }
-
     override fun onStart() {
         super.onStart()
-
         PreferenceManager.getDefaultSharedPreferences(this)
             .registerOnSharedPreferenceChangeListener(this)
 
@@ -71,7 +60,6 @@ class SettingsActivity : AppCompatActivity(), SharedPreferences.OnSharedPreferen
 
     override fun onResume() {
         super.onResume()
-
         for (key in KEYS)
             initSum(PreferenceManager.getDefaultSharedPreferences(applicationContext), key)
     }
@@ -79,19 +67,26 @@ class SettingsActivity : AppCompatActivity(), SharedPreferences.OnSharedPreferen
     override fun onStop() {
         PreferenceManager.getDefaultSharedPreferences(this)
             .unregisterOnSharedPreferenceChangeListener(this)
-
         super.onStop()
+    }
+
+    class FragmentSettingsBasic : PreferenceFragmentCompat() {
+        override fun onCreatePreferencesFix(savedInstanceState: Bundle?, rootKey: String?) {
+            setPreferencesFromResource(R.xml.preferences, rootKey)
+        }
     }
 
     override fun onSharedPreferenceChanged(sharedPreferences: SharedPreferences?, key: String?) {
         val reference =
-            FirebaseDatabase.getInstance().getReference("users/" + FirebaseAuth.getInstance().currentUser!!.uid)
+            FirebaseDatabase.getInstance().getReference("users/" + FirebaseAuth.getInstance().currentUser!!.uid + "/Settings")
+
         when (key) {
             "gender" -> reference.child(key).setValue(sharedPreferences?.getString(key, ""))
             "notificationSwitch" -> reference.child(key).setValue(sharedPreferences?.getBoolean(key, false))
             in listOf("age","goal","height","weight") -> reference.child(key!!).setValue(sharedPreferences?.getString(key, "0")?.toInt()
             )
         }
+
         if(key in KEYS)
         initSum(sharedPreferences, key)
     }

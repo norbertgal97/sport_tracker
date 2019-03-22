@@ -9,8 +9,6 @@
         android:background="@drawable/login_screen_bg"
         android:id="@+id/login_layout_constraint">
 
-
-
     <LinearLayout
             android:id="@+id/login_layout"
             android:layout_width="350dp"

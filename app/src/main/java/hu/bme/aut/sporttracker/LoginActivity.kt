@@ -10,7 +10,13 @@ import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.auth.UserProfileChangeRequest
 import com.google.firebase.database.DatabaseReference
 import com.google.firebase.database.FirebaseDatabase
+import hu.bme.aut.sporttracker.data.Activity
+import hu.bme.aut.sporttracker.data.User
 import kotlinx.android.synthetic.main.activity_login.*
+import java.sql.Date
+import java.text.DateFormat
+import java.time.LocalDate
+import java.util.*
 
 
 class LoginActivity : AppCompatActivity() {
@@ -20,14 +26,13 @@ class LoginActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_login)
+        login_layout_constraint.background.alpha = 255
 
         auth = FirebaseAuth.getInstance()
         databaseUser = FirebaseDatabase.getInstance().getReference("users")
 
         btnLogin.setOnClickListener { loginAccount() }
         btnRegister.setOnClickListener { createAccount() }
-
-        login_layout_constraint.background.alpha=255
     }
 
     private fun validateForm(): Boolean {
@@ -53,17 +58,12 @@ class LoginActivity : AppCompatActivity() {
 
     override fun onStart() {
         super.onStart()
-        login_layout.translationY=-1000f
+        login_layout.translationY = -1000f
         login_layout.animate().translationYBy(1000f).duration = 750
         if (auth.currentUser != null) {
             startActivity(Intent(this@LoginActivity, MainActivity::class.java))
             finish()
         }
-    }
-
-    override fun onResume() {
-        super.onResume()
-
     }
 
     private fun createAccount() {
@@ -89,11 +89,19 @@ class LoginActivity : AppCompatActivity() {
                     170,
                     70
                 )
-                databaseUser.child(FirebaseAuth.getInstance().currentUser!!.uid).setValue(user)
 
+                val activity = Activity(
+                    0f,
+                    0f,
+                    0f,
+                    0L,
+                    DateFormat.getDateInstance(DateFormat.SHORT).format(Calendar.getInstance().time)
+                )
+
+                databaseUser.child(FirebaseAuth.getInstance().currentUser!!.uid).child("Settings").setValue(user)
+                databaseUser.child(FirebaseAuth.getInstance().currentUser!!.uid).child("Activity").setValue(activity)
                 Toast.makeText(this, "Registration successful!", Toast.LENGTH_LONG).show()
                 sendEmailVerification()
-
             }
             .addOnFailureListener { exception ->
                 Toast.makeText(this, exception.message, Toast.LENGTH_LONG).show()
@@ -104,6 +112,7 @@ class LoginActivity : AppCompatActivity() {
         if (!validateForm()) {
             return
         }
+
         auth.signInWithEmailAndPassword(etEmail.text.toString(), etPassword.text.toString())
             .addOnSuccessListener {
                 startActivity(Intent(this@LoginActivity, MainActivity::class.java))

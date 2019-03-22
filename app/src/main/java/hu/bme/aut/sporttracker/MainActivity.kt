@@ -1,53 +1,57 @@
 package hu.bme.aut.sporttracker
 
 import android.content.Intent
-import android.graphics.BitmapFactory
-import android.location.Location
 import android.os.Bundle
-import android.preference.PreferenceManager
+import android.support.v4.content.ContextCompat
 import android.support.v7.app.AppCompatActivity
+import android.support.v7.preference.PreferenceManager
 import android.view.Menu
 import android.view.MenuItem
 import android.widget.Toast
+import com.github.mikephil.charting.charts.PieChart
+import com.github.mikephil.charting.data.PieData
+import com.github.mikephil.charting.data.PieDataSet
+import com.github.mikephil.charting.data.PieEntry
 import com.google.firebase.auth.FirebaseAuth
+import com.google.firebase.database.*
 import kotlinx.android.synthetic.main.activity_main.*
 import kotlinx.android.synthetic.main.content_main.*
-import com.facebook.share.model.SharePhoto
-import com.facebook.share.model.SharePhotoContent
+import java.text.DateFormat
+import java.util.*
+import java.text.SimpleDateFormat
+
 
 class MainActivity : AppCompatActivity() {
+    private lateinit var chartStep: PieChart
+    private var goal: Float = 500f
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
-        main_layout.background.alpha=60
+        main_layout.background.alpha = 60
 
-        val image = BitmapFactory.decodeResource(resources, R.mipmap.ic_launcher)
-        val photo = SharePhoto.Builder().setBitmap(image).setCaption("6000 steps").setUserGenerated(true).build()
-        val content = SharePhotoContent.Builder().addPhoto(photo).build()
+        chartStep = findViewById(R.id.chartSteps)
+        chartStep.description.isEnabled = false
 
-        sharebutton.shareContent=content
-
+        loadData()
         fab.setOnClickListener {
             val intent = Intent(this, CounterActivity::class.java)
             startActivity(intent)
         }
 
-        button.setOnClickListener {
-          /*  val sharedPreferences = PreferenceManager.getDefaultSharedPreferences(applicationContext)
-            Toast.makeText(this, sharedPreferences.getString("name", "DEFAULT"), Toast.LENGTH_LONG).show()*/
-
-            var loc1  = Location("")
-            loc1.latitude=47.470990
-            loc1.longitude=19.048288
-
-            var loc2  = Location("")
-
-            loc2.latitude=47.471447
-            loc2.longitude=19.045803
-            loc1.distanceTo(loc2)
-            Toast.makeText(this, loc1.distanceTo(loc2).toString(), Toast.LENGTH_LONG).show()
+        val sharedPreferences = PreferenceManager.getDefaultSharedPreferences(applicationContext)
+        goal = try {
+            sharedPreferences.getString("goal", "500")!!.toFloat()
+        } catch (e: NullPointerException) {
+            500f
         }
+    }
+
+    override fun onResume() {
+        super.onResume()
+        loadData()
+        if (!FirebaseAuth.getInstance().currentUser!!.isEmailVerified)
+            Toast.makeText(this, "Verify your account!", Toast.LENGTH_LONG).show()
     }
 
     override fun onCreateOptionsMenu(menu: Menu): Boolean {
@@ -70,10 +74,68 @@ class MainActivity : AppCompatActivity() {
         return true
     }
 
-    override fun onResume() {
-        super.onResume()
+    private fun loadStepsData(steps: Float) {
+        val entries: MutableList<PieEntry> = mutableListOf()
+        entries.add(PieEntry(steps, "Steps"))
 
-        if (!FirebaseAuth.getInstance().currentUser!!.isEmailVerified)
-            Toast.makeText(this, "Verify your account!", Toast.LENGTH_LONG).show()
+        val diff: Float = goal - steps
+        if (diff > 0) {
+            entries.add(PieEntry(goal - steps, "Remaining"))
+        } else {
+            entries.add(PieEntry(0f, "Remaining"))
+        }
+
+        val dataSet = PieDataSet(entries, "steps")
+        dataSet.colors = mutableListOf(
+            ContextCompat.getColor(this, R.color.colorPrimary),
+            ContextCompat.getColor(this, R.color.colorAccent)
+        )
+
+        val data = PieData(dataSet)
+        data.setDrawValues(false)
+
+        chartStep.data = data
+        chartStep.centerText = steps.toInt().toString() + "\n" + "/" + goal.toInt().toString() + " steps"
+        chartStep.invalidate()
+    }
+
+    private fun loadData() {
+        val reference = FirebaseDatabase.getInstance()
+            .getReference("users/" + FirebaseAuth.getInstance().currentUser!!.uid + "/Activity")
+        val databaseUser: DatabaseReference = FirebaseDatabase.getInstance().getReference("users")
+
+        databaseUser.child(FirebaseAuth.getInstance().currentUser!!.uid).child("Activity")
+            .addListenerForSingleValueEvent(
+                object : ValueEventListener {
+                    override fun onDataChange(dataSnapshot: DataSnapshot) {
+                        val date = DateFormat.getDateInstance(DateFormat.SHORT).format(Calendar.getInstance().time)
+
+                        if (dataSnapshot.child("date").value.toString() != date) {
+                            reference.child("date").setValue(date)
+                            reference.child("calories").setValue(0)
+                            reference.child("distance").setValue(0)
+                            reference.child("duration").setValue(0)
+                            reference.child("steps").setValue(0)
+                            tvSummaryDate.text = date
+                            tvDistanceCounter.text = "0"
+                            tvCalorieCounter.text = "0"
+                            tvTimeDuration.text = "0"
+                            loadStepsData(0f)
+                        } else {
+                            val formatter = SimpleDateFormat("HH:mm:ss", Locale.US)
+                            formatter.timeZone = TimeZone.getTimeZone("UTC+1")
+                            tvTimeDuration.text =
+                                formatter.format(Date(dataSnapshot.child("duration").value.toString().toLong()))
+                            loadStepsData(dataSnapshot.child("steps").value.toString().toFloat())
+                            tvSummaryDate.text = dataSnapshot.child("date").value.toString()
+                            tvDistanceCounter.text = dataSnapshot.child("distance").value.toString()
+                            tvCalorieCounter.text = dataSnapshot.child("calories").value.toString()
+                        }
+                    }
+
+                    override fun onCancelled(databaseError: DatabaseError) {
+                        Toast.makeText(applicationContext, databaseError.message, Toast.LENGTH_LONG).show()
+                    }
+                })
     }
 }

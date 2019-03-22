@@ -18,12 +18,6 @@
             android:layout_gravity="bottom|center"
             android:layout_margin="@dimen/fab_margin"
             app:srcCompat="@drawable/exercise"
-            app:layout_anchor="@+id/include" app:layout_anchorGravity="bottom|center"/>
-
-    <com.facebook.share.widget.ShareButton
-            android:text="Share"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:id="@+id/sharebutton"/>
+            app:layout_anchor="@+id/include" app:layout_anchorGravity="bottom|right"/>
 
 </android.support.design.widget.CoordinatorLayout>
