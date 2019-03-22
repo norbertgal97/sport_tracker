@@ -1,4 +1,4 @@
-package hu.bme.aut.sporttracker
+package hu.bme.aut.sporttracker.data
 
 data class User(
     var id: String,

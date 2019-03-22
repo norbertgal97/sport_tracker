@@ -1,89 +1,83 @@
 package hu.bme.aut.sporttracker
 
+import android.content.BroadcastReceiver
 import android.content.Context
-import android.hardware.Sensor
-import android.hardware.SensorEvent
-import android.hardware.SensorEventListener
-import android.hardware.SensorManager
+import android.content.Intent
+import android.content.IntentFilter
 import android.support.v7.app.AppCompatActivity
 import android.os.Bundle
-import android.preference.PreferenceManager
-import android.util.Log
-import com.github.mikephil.charting.data.PieEntry
-import android.support.v4.content.ContextCompat
-import com.github.mikephil.charting.data.PieData
-import com.github.mikephil.charting.data.PieDataSet
-import com.github.mikephil.charting.charts.PieChart
+import android.os.SystemClock
+import android.support.v4.content.LocalBroadcastManager
+import hu.bme.aut.sporttracker.service.CounterService
+import hu.bme.aut.sporttracker.service.LocationService
 import kotlinx.android.synthetic.main.activity_counter.*
 
-class CounterActivity : AppCompatActivity(), SensorEventListener {
-    private lateinit var sensorManager: SensorManager
-    private lateinit var chartStep: PieChart
-    private var goal: Float = 500f
+class CounterActivity : AppCompatActivity() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_counter)
+        counter_layout.background.alpha = 60
 
-        sensorManager = getSystemService(Context.SENSOR_SERVICE) as SensorManager
-        chartStep = findViewById(R.id.chartSteps)
-        chartStep.description.isEnabled = false
-
-        val sharedPreferences = PreferenceManager.getDefaultSharedPreferences(applicationContext)
-        goal = try {
-            sharedPreferences.getString("goal", "500")!!.toFloat()
-        } catch (e: NullPointerException) {
-            500f
-        }
-    }
-
-    override fun onResume() {
-        super.onResume()
-        val countSensor: Sensor? = sensorManager.getDefaultSensor(Sensor.TYPE_STEP_COUNTER)
-        sensorManager.registerListener(this, countSensor, SensorManager.SENSOR_DELAY_NORMAL)
-        cTime.start()
-    }
-
-    override fun onPause() {
-        super.onPause()
-        sensorManager.unregisterListener(this)
-        cTime.stop()
-    }
-
-    override fun onAccuracyChanged(sensor: Sensor?, accuracy: Int) {
-    }
-
-    override fun onSensorChanged(event: SensorEvent?) {
-        try {
-            loadData(event!!.values[0])
-        } catch (e: NullPointerException) {
-            Log.e("SensorEvent", "SensorEvent is null")
-        }
-    }
-
-    private fun loadData(steps: Float) {
-        val entries: MutableList<PieEntry> = mutableListOf()
-        entries.add(PieEntry(steps, "Steps"))
-
-        val diff: Float = goal - steps
-        if (diff > 0) {
-            entries.add(PieEntry(goal - steps, "Remaining"))
+        if (LocationService.isRunning) {
+            start_stop_service.text = "STOP"
         } else {
-            entries.add(PieEntry(0f, "Remaining"))
+            start_stop_service.text = "START"
         }
 
+        if (LocationService.elapsedTime != -1L) {
+            cTime.base = LocationService.elapsedTime
+            cTime.start()
+        }
 
-        val dataSet = PieDataSet(entries, "steps")
-        dataSet.colors = mutableListOf(
-            ContextCompat.getColor(this, R.color.colorPrimary),
-            ContextCompat.getColor(this, R.color.colorAccent)
-        )
+        val intent1 = Intent(applicationContext, LocationService::class.java)
+        val intent2 = Intent(applicationContext, CounterService::class.java)
 
-        val data = PieData(dataSet)
-        data.setDrawValues(false)
+        start_stop_service.setOnClickListener {
+            if (LocationService.isRunning) {
+                applicationContext.stopService(intent1)
+                applicationContext.stopService(intent2)
+                start_stop_service.text = "START"
+                cTime.stop()
+            } else {
+                applicationContext.startService(intent1)
+                applicationContext.startService(intent2)
+                start_stop_service.text = "STOP"
+                cTime.base = SystemClock.elapsedRealtime()
+                cTime.start()
+            }
+        }
+    }
 
-        chartStep.data = data
-        chartStep.centerText = steps.toInt().toString() + "\n" + "/" + goal.toInt().toString() + " steps"
-        chartStep.invalidate()
+    override fun onStart() {
+        super.onStart()
+        LocalBroadcastManager.getInstance(applicationContext)
+            .registerReceiver(locationReceiver, IntentFilter(LocationService.BR_NEW_LOCATION))
+        LocalBroadcastManager.getInstance(applicationContext)
+            .registerReceiver(stepReceiver, IntentFilter(CounterService.BR_NEW_STEP))
+    }
+
+    override fun onStop() {
+        LocalBroadcastManager.getInstance(applicationContext)
+            .unregisterReceiver(locationReceiver)
+        LocalBroadcastManager.getInstance(applicationContext)
+            .unregisterReceiver(stepReceiver)
+        super.onStop()
+    }
+
+    private val locationReceiver = object : BroadcastReceiver() {
+        override fun onReceive(context: Context, intent: Intent) {
+            val currentDistance = intent.getLongExtra(LocationService.KEY_DISTANCE, 0L)
+            tvDistanceCounter.text = "$currentDistance m"
+            val currentCalories = intent.getLongExtra(LocationService.KEY_CALORIES, 0L)
+            tvCalorieCounter.text = "$currentCalories kcal"
+        }
+    }
+
+    private val stepReceiver = object : BroadcastReceiver() {
+        override fun onReceive(context: Context, intent: Intent) {
+            val currentSteps = intent.getFloatExtra(CounterService.KEY_STEPS, 0f)
+            tvStepCounter.text = currentSteps.toString()
+        }
     }
 }
