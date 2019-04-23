@@ -32,7 +32,7 @@
                 app:layout_constraintBottom_toBottomOf="parent"
                 android:id="@+id/imageView"/>
         <TextView
-                android:text="Time"
+                android:text="@string/time"
                 android:textColor="@color/colorPrimaryDark"
                 android:textSize="30sp"
                 android:layout_width="wrap_content"
@@ -78,7 +78,7 @@
                 app:layout_constraintBottom_toBottomOf="parent"
                 android:id="@+id/imageView2"/>
         <TextView
-                android:text="Steps"
+                android:text="@string/steps"
                 android:textColor="@color/colorPrimaryDark"
                 android:textSize="30sp"
                 android:layout_width="wrap_content"
@@ -91,7 +91,7 @@
                 android:layout_marginTop="0dp"
                 app:layout_constraintTop_toTopOf="parent"/>
         <TextView
-                android:text="0"
+                android:text="@string/zero"
                 android:textColor="#000"
                 android:textSize="15sp"
                 android:layout_width="wrap_content"
@@ -126,7 +126,7 @@
                 app:layout_constraintBottom_toBottomOf="parent"
                 android:id="@+id/imageView3"/>
         <TextView
-                android:text="Distance"
+                android:text="@string/distance"
                 android:textColor="@color/colorPrimaryDark"
                 android:textSize="30sp"
                 android:layout_width="wrap_content"
@@ -139,7 +139,7 @@
                 android:layout_marginTop="0dp"
                 app:layout_constraintTop_toTopOf="parent"/>
         <TextView
-                android:text="0"
+                android:text="@string/zero"
                 android:textColor="#000"
                 android:textSize="15sp"
                 android:layout_width="wrap_content"
@@ -174,7 +174,7 @@
                 app:layout_constraintBottom_toBottomOf="parent"
                 android:id="@+id/imageView4"/>
         <TextView
-                android:text="Burned calories"
+                android:text="@string/burned_calories"
                 android:textColor="@color/colorPrimaryDark"
                 android:textSize="30sp"
                 android:layout_width="wrap_content"
@@ -187,7 +187,7 @@
                 android:layout_marginTop="0dp"
                 app:layout_constraintTop_toTopOf="parent"/>
         <TextView
-                android:text="0"
+                android:text="@string/zero"
                 android:textColor="#000"
                 android:textSize="15sp"
                 android:layout_width="wrap_content"
@@ -202,7 +202,7 @@
     </android.support.constraint.ConstraintLayout>
 
     <Button
-            android:text="Start"
+            android:text="@string/start2"
             android:backgroundTint="@color/colorAccent"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"

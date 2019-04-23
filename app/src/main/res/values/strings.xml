@@ -1,9 +1,24 @@
 <resources>
     <string name="app_name">Sport Tracker</string>
     <string name="action_settings">Settings</string>
-
-    <!-- TODO: Remove or change this placeholder text -->
     <string name="hello_blank_fragment">Hello blank fragment</string>
     <string name="sign_out">Sign out</string>
     <string name="facebook_app_id">368964093692976</string>
+    <string name="STOP">STOP</string>
+    <string name="START">START</string>
+    <string name="required">Required.</string>
+    <string name="zero">0</string>
+    <string name="time">Time</string>
+    <string name="steps">Steps</string>
+    <string name="burned_calories">Burned calories</string>
+    <string name="start2">Start</string>
+    <string name="email">Email</string>
+    <string name="password">Password</string>
+    <string name="login">Login</string>
+    <string name="register">Register</string>
+    <string name="run_4_fun">RUN 4 FUN</string>
+    <string name="summary">Summary</string>
+    <string name="_2019_03_24">2019. 03. 24.</string>
+    <string name="duration">Duration</string>
+    <string name="distance">Distance</string>
 </resources>

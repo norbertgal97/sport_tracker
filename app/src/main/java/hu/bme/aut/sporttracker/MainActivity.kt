@@ -117,9 +117,9 @@ class MainActivity : AppCompatActivity() {
                             reference.child("duration").setValue(0)
                             reference.child("steps").setValue(0)
                             tvSummaryDate.text = date
-                            tvDistanceCounter.text = "0"
-                            tvCalorieCounter.text = "0"
-                            tvTimeDuration.text = "0"
+                            tvDistanceCounter.text = getString(R.string.zero)
+                            tvCalorieCounter.text = getString(R.string.zero)
+                            tvTimeDuration.text = getString(R.string.zero)
                             loadStepsData(0f)
                         } else {
                             val formatter = SimpleDateFormat("HH:mm:ss", Locale.US)

@@ -38,7 +38,7 @@ class LoginActivity : AppCompatActivity() {
 
         val email = etEmail.text.toString()
         if (TextUtils.isEmpty(email)) {
-            etEmail.error = "Required."
+            etEmail.error = getString(R.string.required)
             valid = false
         } else {
             etEmail.error = null
@@ -46,7 +46,7 @@ class LoginActivity : AppCompatActivity() {
 
         val password = etPassword.text.toString()
         if (TextUtils.isEmpty(password)) {
-            etPassword.error = "Required."
+            etPassword.error = getString(R.string.required)
             valid = false
         } else {
             etPassword.error = null

@@ -33,7 +33,7 @@
                     android:id="@+id/etEmail"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:hint="Email"
+                    android:hint="@string/email"
                     android:inputType="textEmailAddress"
                     android:text=""
                    />
@@ -51,7 +51,7 @@
                     android:id="@+id/etPassword"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:hint="Password"
+                    android:hint="@string/password"
                     android:inputType="textPassword"
                     android:text=""/>
 
@@ -65,7 +65,7 @@
                 android:layout_marginTop="24dp"
                 android:padding="10dp"
                 android:textSize="20sp"
-                android:text="Login"
+                android:text="@string/login"
                 android:backgroundTint="@color/colorAccent"
                 android:textColor="@color/com_facebook_button_background_color_focused"
         />
@@ -75,7 +75,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:padding="10dp"
-                android:text="Register"
+                android:text="@string/register"
                 android:backgroundTint="@color/colorPrimary"
                 android:textSize="20sp"
                 android:textColor="@color/com_facebook_button_background_color_focused"/>
@@ -84,7 +84,7 @@
     <TextView
             android:background="#000000"
             android:textColor="#FFFFFF"
-            android:text="RUN 4 FUN"
+            android:text="@string/run_4_fun"
             android:layout_width="207dp"
             android:layout_height="wrap_content"
             android:id="@+id/textView" app:layout_constraintEnd_toEndOf="parent" android:layout_marginEnd="8dp"

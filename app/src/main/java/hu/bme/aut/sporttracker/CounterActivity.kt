@@ -20,9 +20,9 @@ class CounterActivity : AppCompatActivity() {
         counter_layout.background.alpha = 60
 
         if (LocationService.isRunning) {
-            start_stop_service.text = "STOP"
+            start_stop_service.text = getString(R.string.STOP)
         } else {
-            start_stop_service.text = "START"
+            start_stop_service.text = getString(R.string.START)
         }
 
         if (LocationService.elapsedTime != -1L) {
@@ -37,12 +37,12 @@ class CounterActivity : AppCompatActivity() {
             if (LocationService.isRunning) {
                 applicationContext.stopService(intent1)
                 applicationContext.stopService(intent2)
-                start_stop_service.text = "START"
+                start_stop_service.text = getString(R.string.START)
                 cTime.stop()
             } else {
                 applicationContext.startService(intent1)
                 applicationContext.startService(intent2)
-                start_stop_service.text = "STOP"
+                start_stop_service.text = getString(R.string.STOP)
                 cTime.base = SystemClock.elapsedRealtime()
                 cTime.start()
             }
