@@ -13,9 +13,7 @@ import com.google.firebase.database.FirebaseDatabase
 import hu.bme.aut.sporttracker.data.Activity
 import hu.bme.aut.sporttracker.data.User
 import kotlinx.android.synthetic.main.activity_login.*
-import java.sql.Date
 import java.text.DateFormat
-import java.time.LocalDate
 import java.util.*
 
 
