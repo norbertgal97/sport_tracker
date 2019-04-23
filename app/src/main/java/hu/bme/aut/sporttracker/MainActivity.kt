@@ -1,7 +1,9 @@
 package hu.bme.aut.sporttracker
 
+import android.app.PendingIntent
 import android.content.Intent
 import android.os.Bundle
+import android.support.v4.app.NotificationCompat
 import android.support.v4.content.ContextCompat
 import android.support.v7.app.AppCompatActivity
 import android.support.v7.preference.PreferenceManager
@@ -19,9 +21,15 @@ import kotlinx.android.synthetic.main.content_main.*
 import java.text.DateFormat
 import java.util.*
 import java.text.SimpleDateFormat
+import android.app.NotificationManager
+import android.content.Context
 
 
 class MainActivity : AppCompatActivity() {
+    companion object {
+        private const val NOTIFICATION_ID = 103
+    }
+
     private lateinit var chartStep: PieChart
     private var goal: Float = 500f
 
@@ -45,13 +53,34 @@ class MainActivity : AppCompatActivity() {
         } catch (e: NullPointerException) {
             500f
         }
+
+        if (!FirebaseAuth.getInstance().currentUser!!.isEmailVerified) {
+            if (sharedPreferences.getBoolean("notificationSwitch", false)) {
+                Toast.makeText(this, "Verify your account!", Toast.LENGTH_LONG).show()
+                val notificationIntent = Intent(this, MainActivity::class.java)
+                notificationIntent.flags = Intent.FLAG_ACTIVITY_CLEAR_TASK
+
+                val contentIntent = PendingIntent.getActivity(
+                    this,
+                    NOTIFICATION_ID,
+                    notificationIntent,
+                    PendingIntent.FLAG_CANCEL_CURRENT
+                )
+                val mBuilder = NotificationCompat.Builder(this, "default")
+                    .setContentTitle("Sport Tracker")
+                    .setContentText("Verify your account!")
+                    .setSmallIcon(R.mipmap.ic_launcher)
+                    .setContentIntent(contentIntent)
+
+                val notificationManager = getSystemService(Context.NOTIFICATION_SERVICE) as NotificationManager
+                notificationManager.notify(NOTIFICATION_ID, mBuilder.build())
+            }
+        }
     }
 
     override fun onResume() {
         super.onResume()
         loadData()
-        if (!FirebaseAuth.getInstance().currentUser!!.isEmailVerified)
-            Toast.makeText(this, "Verify your account!", Toast.LENGTH_LONG).show()
     }
 
     override fun onCreateOptionsMenu(menu: Menu): Boolean {
