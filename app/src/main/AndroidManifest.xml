@@ -1,12 +1,12 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
-          xmlns:tools="http://schemas.android.com/tools" package="hu.bme.aut.sporttracker">
+          xmlns:tools="http://schemas.android.com/tools"
+          package="hu.bme.aut.sporttracker">
 
     <uses-permission android:name="android.permission.INTERNET"/>
-    <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION" />
-    <uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION" />
-    <uses-permission android:name="com.google.android.gms.permission.ACTIVITY_RECOGNITION" />
-
+    <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION"/>
+    <uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION"/>
+    <uses-permission android:name="com.google.android.gms.permission.ACTIVITY_RECOGNITION"/>
 
     <application
             android:allowBackup="true"
@@ -16,16 +16,22 @@
             android:supportsRtl="true"
             android:theme="@style/AppTheme"
             tools:ignore="GoogleAppIndexingWarning">
-        <provider android:authorities="com.facebook.app.FacebookContentProvider368964093692976"
-                  android:name="com.facebook.FacebookContentProvider"
-                  android:exported="true"/>
+        <activity android:name=".WeeklySummaryActivity">
+        </activity>
 
-        <service android:name=".service.LocationService" />
-        <service android:name=".service.CounterService" />
-        <service android:name=".service.ActivityRecognitionService" />
+        <provider
+                android:name="com.facebook.FacebookContentProvider"
+                android:authorities="com.facebook.app.FacebookContentProvider368964093692976"
+                android:exported="true"/>
 
+        <service android:name=".service.LocationService"/>
+        <service android:name=".service.CounterService"/>
+        <service android:name=".service.ActivityRecognitionService"/>
 
-        <meta-data android:name="com.facebook.sdk.ApplicationId" android:value="@string/facebook_app_id"/>
+        <meta-data
+                android:name="com.facebook.sdk.ApplicationId"
+                android:value="@string/facebook_app_id"/>
+
         <activity android:name=".MainActivity">
         </activity>
         <activity android:name=".SettingsActivity">

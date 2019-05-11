@@ -17,8 +17,17 @@
     <string name="login">Login</string>
     <string name="register">Register</string>
     <string name="run_4_fun">RUN 4 FUN</string>
-    <string name="summary">Summary</string>
+    <string name="summary">Daily Summary</string>
     <string name="_2019_03_24">2019. 03. 24.</string>
     <string name="duration">Duration</string>
     <string name="distance">Distance</string>
+    <string name="_steps"> steps</string>
+    <string name="weekly_summary">Weekly Summary</string>
+    <string name="monday">Monday</string>
+    <string name="tuesday">Tuesday</string>
+    <string name="wednesday">Wednesday</string>
+    <string name="thursday">Thursday</string>
+    <string name="friday">Friday</string>
+    <string name="saturday">Saturday</string>
+    <string name="sunday">Sunday</string>
 </resources>

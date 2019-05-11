@@ -20,4 +20,14 @@
             app:srcCompat="@drawable/exercise"
             app:layout_anchor="@+id/include" app:layout_anchorGravity="bottom|right"/>
 
+    <android.support.design.widget.FloatingActionButton
+            android:id="@+id/fab2"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="bottom|center"
+            android:layout_marginBottom="70dp"
+            android:layout_marginEnd="8dp"
+            app:srcCompat="@drawable/calendar_w"
+            app:layout_anchor="@+id/include"
+            app:layout_anchorGravity="bottom|right"/>
 </android.support.design.widget.CoordinatorLayout>

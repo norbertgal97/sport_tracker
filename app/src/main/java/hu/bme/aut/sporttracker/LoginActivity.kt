@@ -12,6 +12,7 @@ import com.google.firebase.database.DatabaseReference
 import com.google.firebase.database.FirebaseDatabase
 import hu.bme.aut.sporttracker.data.Activity
 import hu.bme.aut.sporttracker.data.User
+import hu.bme.aut.sporttracker.data.Week
 import kotlinx.android.synthetic.main.activity_login.*
 import java.text.DateFormat
 import java.util.*
@@ -81,7 +82,7 @@ class LoginActivity : AppCompatActivity() {
                 val user = User(
                     FirebaseAuth.getInstance().currentUser!!.uid,
                     false,
-                    10,
+                    500,
                     18,
                     "Male",
                     170,
@@ -96,8 +97,21 @@ class LoginActivity : AppCompatActivity() {
                     DateFormat.getDateInstance(DateFormat.SHORT).format(Calendar.getInstance().time)
                 )
 
+                val week = Week(
+                    0,
+                    0,
+                  0,
+                    0,
+                      0,
+                    0,
+                    0,
+                    2019,
+                    10
+                )
+
                 databaseUser.child(FirebaseAuth.getInstance().currentUser!!.uid).child("Settings").setValue(user)
                 databaseUser.child(FirebaseAuth.getInstance().currentUser!!.uid).child("Activity").setValue(activity)
+                databaseUser.child(FirebaseAuth.getInstance().currentUser!!.uid).child("Week").setValue(week)
                 Toast.makeText(this, "Registration successful!", Toast.LENGTH_LONG).show()
                 sendEmailVerification()
             }

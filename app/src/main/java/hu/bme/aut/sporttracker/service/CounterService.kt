@@ -1,6 +1,5 @@
 package hu.bme.aut.sporttracker.service
 
-
 import android.app.Notification
 import android.app.NotificationManager
 import android.app.PendingIntent
@@ -20,7 +19,7 @@ import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.database.*
 import hu.bme.aut.sporttracker.MainActivity
 import hu.bme.aut.sporttracker.R
-
+import java.util.*
 
 class CounterService : Service(), SensorEventListener {
     companion object {
@@ -48,6 +47,7 @@ class CounterService : Service(), SensorEventListener {
     override fun onDestroy() {
         sensorManager.unregisterListener(this)
         saveSteps(steps, stepsTakenFirebase)
+        saveWeeklySteps(steps, stepsTakenFirebase)
         super.onDestroy()
     }
 
@@ -72,6 +72,27 @@ class CounterService : Service(), SensorEventListener {
             .getReference("users/" + FirebaseAuth.getInstance().currentUser!!.uid + "/Activity")
 
         reference.child("steps").setValue(steps + stepsTaken)
+    }
+
+    private fun saveWeeklySteps(steps: Float, stepsTaken: Float) {
+        val reference = FirebaseDatabase.getInstance()
+            .getReference("users/" + FirebaseAuth.getInstance().currentUser!!.uid + "/Week")
+
+        val calendar = Calendar.getInstance()
+        val day = calendar.get(Calendar.DAY_OF_WEEK)
+
+        when (day) {
+            Calendar.MONDAY -> reference.child("monday").setValue(steps + stepsTaken)
+            Calendar.TUESDAY -> reference.child("tuesday").setValue(steps + stepsTaken)
+            Calendar.WEDNESDAY -> reference.child("wednesday").setValue(steps + stepsTaken)
+            Calendar.THURSDAY -> reference.child("thursday").setValue(steps + stepsTaken)
+            Calendar.FRIDAY -> reference.child("friday").setValue(steps + stepsTaken)
+            Calendar.SATURDAY -> reference.child("saturday").setValue(steps + stepsTaken)
+            Calendar.SUNDAY -> reference.child("sunday").setValue(steps + stepsTaken)
+        }
+
+        reference.child("year").setValue(calendar.get(Calendar.YEAR))
+        reference.child("week").setValue(calendar.get(Calendar.WEEK_OF_YEAR))
     }
 
     private fun loadSteps() {

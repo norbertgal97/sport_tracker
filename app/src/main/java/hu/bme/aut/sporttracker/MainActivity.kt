@@ -47,13 +47,14 @@ class MainActivity : AppCompatActivity() {
             startActivity(intent)
         }
 
-        val sharedPreferences = PreferenceManager.getDefaultSharedPreferences(applicationContext)
-        goal = try {
-            sharedPreferences.getString("goal", "500")!!.toFloat()
-        } catch (e: NullPointerException) {
-            500f
+        fab2.setOnClickListener {
+            val intent = Intent(this, WeeklySummaryActivity::class.java)
+            startActivity(intent)
         }
 
+        loadGoal()
+
+        val sharedPreferences = PreferenceManager.getDefaultSharedPreferences(applicationContext)
         if (!FirebaseAuth.getInstance().currentUser!!.isEmailVerified) {
             if (sharedPreferences.getBoolean("notificationSwitch", false)) {
                 Toast.makeText(this, "Verify your account!", Toast.LENGTH_LONG).show()
@@ -81,6 +82,8 @@ class MainActivity : AppCompatActivity() {
     override fun onResume() {
         super.onResume()
         loadData()
+        loadGoal()
+        resetWeeklyData()
     }
 
     override fun onCreateOptionsMenu(menu: Menu): Boolean {
@@ -157,8 +160,8 @@ class MainActivity : AppCompatActivity() {
                                 formatter.format(Date(dataSnapshot.child("duration").value.toString().toLong()))
                             loadStepsData(dataSnapshot.child("steps").value.toString().toFloat())
                             tvSummaryDate.text = dataSnapshot.child("date").value.toString()
-                            tvDistanceCounter.text = dataSnapshot.child("distance").value.toString()
-                            tvCalorieCounter.text = dataSnapshot.child("calories").value.toString()
+                            tvDistanceCounter.text = dataSnapshot.child("distance").value.toString() + " m"
+                            tvCalorieCounter.text = dataSnapshot.child("calories").value.toString() + " kcal"
                         }
                     }
 
@@ -166,5 +169,47 @@ class MainActivity : AppCompatActivity() {
                         Toast.makeText(applicationContext, databaseError.message, Toast.LENGTH_LONG).show()
                     }
                 })
+    }
+
+    private fun resetWeeklyData() {
+        val reference = FirebaseDatabase.getInstance()
+            .getReference("users/" + FirebaseAuth.getInstance().currentUser!!.uid + "/Week")
+        val databaseUser: DatabaseReference = FirebaseDatabase.getInstance().getReference("users")
+
+        databaseUser.child(FirebaseAuth.getInstance().currentUser!!.uid).child("Week")
+            .addListenerForSingleValueEvent(
+                object : ValueEventListener {
+                    override fun onDataChange(dataSnapshot: DataSnapshot) {
+
+                        val calendar = Calendar.getInstance()
+
+                        if (dataSnapshot.child("week").value.toString().toInt() < calendar.get(Calendar.WEEK_OF_YEAR) ||
+                            calendar.get(Calendar.YEAR) > dataSnapshot.child("year").value.toString().toInt()
+                        ) {
+                            reference.child("monday").setValue(0)
+                            reference.child("tuesday").setValue(0)
+                            reference.child("wednesday").setValue(0)
+                            reference.child("thursday").setValue(0)
+                            reference.child("friday").setValue(0)
+                            reference.child("saturday").setValue(0)
+                            reference.child("sunday").setValue(0)
+                            reference.child("year").setValue(calendar.get(Calendar.YEAR))
+                            reference.child("week").setValue(calendar.get(Calendar.WEEK_OF_YEAR))
+                        }
+                    }
+
+                    override fun onCancelled(databaseError: DatabaseError) {
+                        Toast.makeText(applicationContext, databaseError.message, Toast.LENGTH_LONG).show()
+                    }
+                })
+    }
+
+    private fun loadGoal() {
+        val sharedPreferences = PreferenceManager.getDefaultSharedPreferences(applicationContext)
+        goal = try {
+            sharedPreferences.getString("goal", "500")!!.toFloat()
+        } catch (e: NullPointerException) {
+            500f
+        }
     }
 }
