@@ -1,7 +1,6 @@
 package hu.bme.aut.sporttracker.data
 
 data class User(
-    var id: String,
     var notificationSwitch: Boolean?,
     var goal: Int?,
     var age: Int?,

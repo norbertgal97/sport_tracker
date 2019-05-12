@@ -114,7 +114,7 @@ class LocationService : Service(), GoogleApiClient.ConnectionCallbacks, GoogleAp
             if (distance != null)
                 distanceSum += distance
 
-            updateNotification("Distance: $distanceSum")
+            updateNotification("Distance: $distanceSum m")
             lastLocation = location
 
             val savedElapsedTime = SystemClock.elapsedRealtime()

@@ -61,7 +61,7 @@ class CounterService : Service(), SensorEventListener {
             intent.action = BR_NEW_STEP
             intent.putExtra(KEY_STEPS, steps)
             LocalBroadcastManager.getInstance(this@CounterService).sendBroadcast(intent)
-            updateNotification("Steps: $steps")
+            updateNotification("Steps: $steps steps")
         } catch (e: NullPointerException) {
             Log.e("SensorEvent", "SensorEvent is null")
         }

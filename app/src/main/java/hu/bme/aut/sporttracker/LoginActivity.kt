@@ -80,7 +80,6 @@ class LoginActivity : AppCompatActivity() {
                 firebaseUser.updateProfile(profileChangeRequest)
 
                 val user = User(
-                    FirebaseAuth.getInstance().currentUser!!.uid,
                     false,
                     500,
                     18,
